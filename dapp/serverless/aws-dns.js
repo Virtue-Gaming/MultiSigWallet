@@ -91,8 +91,8 @@ async function getHostedZoneId(domainName) {
 }
 
 function configureThem(sls) {
-    //base.addHook(sls, 'after:deploy:deploy', _addDnsRecord);
-    //base.addHook(sls, 'before:remove:remove', _removeDnsRecord);
+    base.addHook(sls, 'after:deploy:deploy', _addDnsRecord);
+    base.addHook(sls, 'before:remove:remove', _removeDnsRecord);
 }
 
 module.exports = {
