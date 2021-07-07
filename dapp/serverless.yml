@@ -1,0 +1,33 @@
+service: vp-multisig-app
+
+plugins:
+  - fullstack-serverless
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'staging'}
+  region: us-east-1
+  profile: virtue.deployer.${self:custom.card}
+
+  deploymentBucket:
+    name: ${self:provider.profile}-${self:provider.region}
+    serverSideEncryption: AES256
+
+custom:
+  aws: ${file(./serverless/aws-config.js)}
+  config: ${file(./serverless/config/config-${self:provider.stage}.yml)}
+  card: ${opt:aws-account, 'king'}  
+
+  fullstack:
+    domain: ${self:custom.config.domains}      
+    certificate: arn:aws:acm:us-east-1:#{AWS::AccountId}:certificate/${self:custom.config.certificateId} # Cloudfront only supports certificates in us-east-1
+    bucketName: ${self:provider.stage}.${self:custom.card}.multisig.${self:provider.region}      # Unique name for the S3 bucket to host the client assets
+    distributionFolder: src                 # Path to the client assets to be uploaded to S3
+    indexDocument: index.html                  # The index document to use
+    errorDocument: error.html                  # The error document to use
+    singlePageApp: true                       # If true 403 errors will be rerouted (missing assets) to your root index document to support single page apps like React and Angular where the js framework handles routing
+    clientCommand: npm run build-libs-web      # Command to generate the client assets. Defaults to doing nothing
+    invalidationPaths:
+      - /*
