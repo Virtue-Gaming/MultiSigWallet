@@ -342,7 +342,7 @@
             safeMigrated: w.safeMigrated || false
           }
         );
-        
+
         localStorage.setItem("wallets", JSON.stringify(wallets));
         wallet.updates++;
         try{
@@ -382,7 +382,7 @@
         *        "address" : [ abi array ]
         *    },
         *    "addressBook": {
-        * 
+        *
         *    }
         *  }
         *
@@ -504,7 +504,7 @@
         }
 
         wallet.wallets = wallet.toChecksummedWalletConfiguration(walletsData);
-        // Save changes to `wallets` 
+        // Save changes to `wallets`
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         // Save changes to `addressBook`
         if (validJsonConfig.addressBook) {
@@ -568,7 +568,7 @@
 
             Object.assign(
               tokens[Web3Service.toChecksumAddress(token)],
-              walletsData[wallet].tokens[token], 
+              walletsData[wallet].tokens[token],
               {
                 address: Web3Service.toChecksumAddress(walletsData[wallet].tokens[token].address || token)
               }
@@ -1304,31 +1304,17 @@
           }
           else {
             // estimate gas
-            walletInstance.submitTransaction.estimateGas(
-              tx.to,
-              tx.value,
-              data,
-              count,
-              wallet.txDefaults(),
-              function (e, gas) {
-                if (e) {
-                  cb(e);
-                }
-                else {
-                  Web3Service.sendTransaction(
-                    walletInstance.submitTransaction,
-                    [
-                      tx.to,
-                      tx.value,
-                      data,
-                      count,
-                      wallet.txDefaults({gas: Math.ceil(gas * 1.5)}),
-                    ],
-                    options,
-                    cb
-                  );
-                }
-              }
+            Web3Service.sendTransaction(
+                walletInstance.submitTransaction,
+                [
+                  tx.to,
+                  tx.value,
+                  data,
+                  count,
+                  wallet.txDefaults({gas: Math.ceil(200000 * 1.5)}),
+                ],
+                options,
+                cb
             );
           }
         }).call();
