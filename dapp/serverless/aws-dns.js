@@ -57,7 +57,7 @@ async function createCnameDnsRecord(key, value, sls) {
 }
 
 function getDomainName(sls) {
-    return sls.service.custom.fullstack.domain;
+    return sls.service.custom.fullstack.domain.toString();
 }
 
 function getApiDistributionDomain(sls) {
