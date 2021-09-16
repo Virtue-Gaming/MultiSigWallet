@@ -1149,22 +1149,16 @@
       */
       wallet.confirmTransaction = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        instance.confirmTransaction.estimateGas(txId, wallet.txDefaults(), function (e, gas){
-          if (e) {
-            cb(e);
-          }
-          else {
-            Web3Service.sendTransaction(
-              instance.confirmTransaction,
-              [
-                txId,
-                wallet.txDefaults({gas: Math.ceil(gas * 1.5)})
-              ],
-              options,
-              cb
-            );
-          }
-        });
+        //Remove estimage gas
+        Web3Service.sendTransaction(
+            instance.confirmTransaction,
+            [
+              txId,
+              wallet.txDefaults({gas: Math.ceil(200000 * 1.5)})
+            ],
+            options,
+            cb
+        );
       };
 
       /**
@@ -1189,22 +1183,16 @@
       */
       wallet.executeTransaction = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        instance.executeTransaction.estimateGas(txId, wallet.txDefaults(), function (e, gas) {
-          if (e) {
-            cb(e);
-          }
-          else {
-            Web3Service.sendTransaction(
-              instance.executeTransaction,
-              [
-                txId,
-                wallet.txDefaults({gas: Math.ceil(gas * 1.5)})
-              ],
-              options,
-              cb
-            );
-          }
-        });
+        //Estimate gas removed as kaleido bug
+        Web3Service.sendTransaction(
+            instance.executeTransaction,
+            [
+              txId,
+              wallet.txDefaults({gas: Math.ceil(200000 * 1.5)})
+            ],
+            options,
+            cb
+        );
       };
 
       /**
@@ -1303,7 +1291,7 @@
             cb(e);
           }
           else {
-            // estimate gas
+            // we don't estimate gas anymore
             Web3Service.sendTransaction(
                 walletInstance.submitTransaction,
                 [
